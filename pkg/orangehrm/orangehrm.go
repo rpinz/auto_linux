@@ -1,4 +1,4 @@
-package main
+package orangehrm
 
 import (
 	"flag"
@@ -9,7 +9,8 @@ import (
 	"time"
 )
 
-func main() {
+// Run the install
+func Run() int {
 	var ohrmHost = flag.String("orangehrm_host", "http://127.0.0.1", "Orangehrm host address.")
 	var dbUser = flag.String("dbuser", "orangehrm", "Orangehrm database user.")
 	var dbName = flag.String("dbname", "orangehrm", "Orangehrm database user.")
@@ -32,7 +33,10 @@ func main() {
 	if err != nil {
 		panic("Orangehrm Home request failed!")
 	}
-	resp.Body.Close()
+	err = resp.Body.Close()
+	if err != nil {
+		panic("Orangehrm Home close failed!")
+	}
 
 	// Accept license
 	log.Println("Accept license")
@@ -42,10 +46,13 @@ func main() {
 	ohrmURL := *ohrmHost + "/install.php"
 	resp, err = ohrmClient.PostForm(ohrmURL, data)
 	if err != nil {
-		panic("Orangehrm Accept license failed!")
+		panic("Orangehrm Accept license request failed!")
 	}
 	log.Println(resp.StatusCode)
-	resp.Body.Close()
+	err = resp.Body.Close()
+	if err != nil {
+		panic("Orangehrm Accept license close failed!")
+	}
 
 	// Send database info request
 	log.Println("Send database info request")
@@ -67,7 +74,10 @@ func main() {
 		panic("Orangehrm database info request failed!")
 	}
 	log.Println(resp.StatusCode)
-	resp.Body.Close()
+	err = resp.Body.Close()
+	if err != nil {
+		panic("Orangehrm database info close failed!")
+	}
 
 	// System check OK request
 	log.Println("Send System check OK request")
@@ -79,7 +89,10 @@ func main() {
 		panic("Orangehrm System check OK request failed!")
 	}
 	log.Println(resp.StatusCode)
-	resp.Body.Close()
+	err = resp.Body.Close()
+	if err != nil {
+		panic("Orangehrm System check OK close failed!")
+	}
 
 	// Send Admin account creation request
 	log.Println("Send Admin account creation request")
@@ -94,7 +107,10 @@ func main() {
 		panic("Orangehrm Language request failed!")
 	}
 	log.Println(resp.StatusCode)
-	resp.Body.Close()
+	err = resp.Body.Close()
+	if err != nil {
+		panic("Orangehrm Language close failed!")
+	}
 
 	// Confirm install request
 	log.Println("Send Confirm install request")
@@ -106,7 +122,10 @@ func main() {
 		panic("Orangehrm Confirm install request failed!")
 	}
 	log.Println(resp.StatusCode)
-	resp.Body.Close()
+	err = resp.Body.Close()
+	if err != nil {
+		panic("Orangehrm Confirm install close failed!")
+	}
 
 	// Send five requests
 	log.Println("Send five request for the install")
@@ -115,7 +134,10 @@ func main() {
 		if err != nil {
 			panic("Orangehrm install request failed!")
 		}
-		resp.Body.Close()
+		err = resp.Body.Close()
+		if err != nil {
+			panic("Orangehrm install close failed!")
+		}
 	}
 	time.Sleep(5 * time.Second)
 
@@ -129,7 +151,10 @@ func main() {
 		panic("Orangehrm REGISTER request failed!")
 	}
 	log.Println(resp.StatusCode)
-	resp.Body.Close()
+	err = resp.Body.Close()
+	if err != nil {
+		panic("Orangehrm REGISTER close failed!")
+	}
 
 	// Skip user registration request
 	log.Println("Send Skip user registration request")
@@ -147,7 +172,12 @@ func main() {
 		panic("Orangehrm Skip user registration request failed!")
 	}
 	log.Println(resp.StatusCode)
-	resp.Body.Close()
+	err = resp.Body.Close()
+	if err != nil {
+		panic("Orangehrm Skip user registration close failed!")
+	}
 
 	log.Println("Done!! :)")
+
+	return 0
 }

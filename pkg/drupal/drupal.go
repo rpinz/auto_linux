@@ -1,9 +1,8 @@
-package main
+package drupal
 
 import (
 	"flag"
 	"io"
-	"io/ioutil"
 	"log"
 	"net/http"
 	"net/http/cookiejar"
@@ -12,7 +11,7 @@ import (
 )
 
 func findBuildFormID(resp http.Response) string {
-	body, err := ioutil.ReadAll(resp.Body)
+	body, err := io.ReadAll(resp.Body)
 	if err != nil {
 		panic("Error reading resp.Body!")
 	}
@@ -24,12 +23,9 @@ func findBuildFormID(resp http.Response) string {
 }
 
 func getInstallProgress(resp http.Response) string {
-	body, err := ioutil.ReadAll(resp.Body)
+	body, err := io.ReadAll(resp.Body)
 	if err != nil {
 		panic("Error reading resp.Body!")
-	}
-	type Property struct {
-		Name, Text string
 	}
 	bodyStr := string(body)
 	jsonIndexStart := strings.Index(bodyStr, "percentage") + 13
@@ -38,7 +34,8 @@ func getInstallProgress(resp http.Response) string {
 	return percentage
 }
 
-func main() {
+// Run the install
+func Run() int {
 	var drupalHost = flag.String("drupal_host", "http://127.0.0.1", "Drupal host address.")
 	var dbUser = flag.String("dbuser", "drupal", "Drupal database user.")
 	var dbName = flag.String("dbname", "drupal", "Drupal database user.")
@@ -63,7 +60,10 @@ func main() {
 	}
 	formBuildID := findBuildFormID(*resp)
 	log.Println(formBuildID)
-	resp.Body.Close()
+	err = resp.Body.Close()
+	if err != nil {
+		panic("Drupal Home close failed!")
+	}
 
 	// Send Select Language request
 	log.Println("Send Select Language request")
@@ -80,7 +80,10 @@ func main() {
 	log.Println(resp.StatusCode)
 	formBuildID = findBuildFormID(*resp)
 	log.Println(formBuildID)
-	resp.Body.Close()
+	err = resp.Body.Close()
+	if err != nil {
+		panic("Drupal Language close failed!")
+	}
 
 	// Send install profile request
 	log.Println("Send install profile request")
@@ -97,7 +100,10 @@ func main() {
 	log.Println(resp.StatusCode)
 	formBuildID = findBuildFormID(*resp)
 	log.Println(formBuildID)
-	resp.Body.Close()
+	err = resp.Body.Close()
+	if err != nil {
+		panic("Drupal install profile close failed!")
+	}
 
 	// Send Configure DB request
 	log.Println("Send Configure DB request")
@@ -117,7 +123,10 @@ func main() {
 		panic("Drupal Configure DB request failed!")
 	}
 	log.Println(resp.StatusCode)
-	resp.Body.Close()
+	err = resp.Body.Close()
+	if err != nil {
+		panic("Drupal Configure DB close failed!")
+	}
 
 	// Send start install request
 	log.Println("Send start install request")
@@ -127,7 +136,10 @@ func main() {
 		panic("Drupal Language request failed!")
 	}
 	log.Println(resp.StatusCode)
-	resp.Body.Close()
+	err = resp.Body.Close()
+	if err != nil {
+		panic("Drupal Language close failed!")
+	}
 
 	// Poll install progress
 	log.Println("Polling install progress")
@@ -156,7 +168,10 @@ func main() {
 	log.Println(resp.StatusCode)
 	formBuildID = findBuildFormID(*resp)
 	log.Println(formBuildID)
-	resp.Body.Close()
+	err = resp.Body.Close()
+	if err != nil {
+		panic("Drupal install finished close failed!")
+	}
 
 	// Send final request
 	log.Println("Send final request")
@@ -179,7 +194,12 @@ func main() {
 		panic("Drupal install profile request failed!")
 	}
 	log.Println(resp.StatusCode)
-	resp.Body.Close()
+	err = resp.Body.Close()
+	if err != nil {
+		panic("Drupal install profile close failed!")
+	}
 
 	log.Println("Done!! :)")
+
+	return 0
 }
