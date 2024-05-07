@@ -1,3 +1,12 @@
+//
+// cmd/drupal/main.go
+//
+// 💧 auto_linux
+//
+// gionnec@gmail.com
+// iXOM@prosversusjoes.net
+//
+
 package main
 
 import (
@@ -9,16 +18,17 @@ import (
 )
 
 func usage() int {
-	fmt.Println("Usage:")
+	fmt.Println("💧 Usage:")
 	fmt.Printf("%s:\n", os.Args[0])
-	fmt.Printf("  --dbuser=\"drupal\"\n")
-	fmt.Printf("  --dbname=\"drupal\"\n")
-	fmt.Printf("  --dbhost=\"localhost\"\n")
-	fmt.Printf("  --dbport=\"3306\"\n")
-	fmt.Printf("  --admin=\"admin\"\n")
-	fmt.Printf("  --site_mail=\"noone@nowhere.no\"\n")
-	fmt.Printf("  --site_name=\"name\"\n")
-	fmt.Printf("  --account_pass=\"ubuntu\"\n")
+	fmt.Printf("  --url=\"http://localhost\"  Drupal host URL.\n")
+	fmt.Printf("  --dbuser=\"drupal\"         Drupal database user.\n")
+	fmt.Printf("  --dbname=\"drupal\"         Drupal database name.\n")
+	fmt.Printf("  --dbhost=\"localhost\"      Drupal database host.\n")
+	fmt.Printf("  --dbport=\"3306\"           Drupal database port.\n")
+	fmt.Printf("  --admin=\"admin\"           Drupal admin user.\n")
+	fmt.Printf("  --admin_pass=\"ubuntu\"     Drupal admin password.\n")
+	fmt.Printf("  --site_mail=\"no@no.no\"    Drupal site email.\n")
+	fmt.Printf("  --site_name=\"name\"        Drupal site name.\n")
 	return 1
 }
 

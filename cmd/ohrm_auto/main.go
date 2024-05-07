@@ -1,3 +1,12 @@
+//
+// cmd/orangehrm/main.go
+//
+// 🍊 auto_linux
+//
+// gionnec@gmail.com
+// iXOM@prosversusjoes.net
+//
+
 package main
 
 import (
@@ -9,14 +18,15 @@ import (
 )
 
 func usage() int {
-	fmt.Println("Usage:")
+	fmt.Println("🍊 Usage:")
 	fmt.Printf("%s:\n", os.Args[0])
-	fmt.Printf("  --dbuser=\"drupal\"\n")
-	fmt.Printf("  --dbname=\"drupal\"\n")
-	fmt.Printf("  --dbhost=\"localhost\"\n")
-	fmt.Printf("  --dbport=\"3306\"\n")
-	fmt.Printf("  --admin=\"admin\"\n")
-	fmt.Printf("  --account_pass=\"ubuntu\"\n")
+	fmt.Printf("  --url=\"http://localhost\"  OrangeHRM host URL.\n")
+	fmt.Printf("  --dbuser=\"ohrmuser\"       OrangeHRM database user.\n")
+	fmt.Printf("  --dbname=\"ohrm\"           OrangeHRM database name.\n")
+	fmt.Printf("  --dbhost=\"localhost\"      OrangeHRM database host.\n")
+	fmt.Printf("  --dbport=\"3306\"           OrangeHRM database port.\n")
+	fmt.Printf("  --admin=\"admin\"           OrangeHRM admin user.\n")
+	fmt.Printf("  --admin_pass=\"ubuntu\"     OrangeHRM admin account password.\n")
 	return 1
 }
 

@@ -24,7 +24,7 @@
                                ##                            #######
 # auto_linux
 
-Installers for Drupal and OrangeHRM.
+Installers for 💧Drupal and 🍊OrangeHRM.
 
 #### Make the installers:
 ``` bash

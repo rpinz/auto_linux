@@ -35,7 +35,7 @@ install:
 	@go install golang.org/x/lint/golint@latest
 	@echo " 📦 gosec"
 	@go install github.com/securego/gosec/v2/cmd/gosec@latest
-	@echo " 📦 golintci-lint"
+	@echo " 📦 golangci-lint"
 	@go install github.com/golangci/golangci-lint/cmd/golangci-lint@latest
 
 drupal_auto:
