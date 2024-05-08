@@ -1,0 +1,116 @@
+---
+name: auto_linux CI
+
+permissions: {}
+
+on:  # yamllint disable-line rule:truthy
+  pull_request:
+    branches: ["master"]
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: 'stable'
+          check-latest: true
+
+      - name: Go Format
+        run: gofmt -s -w . && git diff --exit-code
+
+      - name: Go Vet drupal_auto
+        run: go vet ./cmd/drupal_auto/...
+
+      - name: Go Vet ohrm_auto
+        run: go vet ./cmd/ohrm_auto/...
+
+      - name: Go Mod Tidy
+        run: go mod tidy && git diff --exit-code
+
+      - name: Go Mod Verify
+        run: go mod verify
+
+      - name: Install golint
+        run: go install golang.org/x/lint/golint@latest
+
+      - name: Run golint
+        run: golint ./...
+
+      - name: Install golangci-lint
+        run: go install github.com/golangci/golangci-lint/cmd/golangci-lint@latest
+
+      - name: Run golangci-lint
+        run: golangci-lint run ./...
+
+      - name: Install staticcheck
+        run: go install honnef.co/go/tools/cmd/staticcheck@latest
+
+      - name: Run staticcheck
+        run: staticcheck ./... || exit 0
+
+      - name: Install gocyclo
+        run: go install github.com/fzipp/gocyclo/cmd/gocyclo@latest
+
+      - name: Run gocyclo
+        run: gocyclo . || exit 0
+
+      - name: Run gocyclo top 10
+        run: gocyclo -top 10 . || exit 0
+
+      - name: Run gocyclo over 5
+        run: gocyclo -over 5 . || exit 0
+
+      - name: Run gocyclo average
+        run: gocyclo -avg . || exit 0
+
+      - name: Run gocyclo over 2 average
+        run: gocyclo -over 2 -avg . || exit 0
+
+      - name: Install ineffassign
+        run: go install github.com/gordonklaus/ineffassign@latest
+
+      - name: Run ineffassign
+        run: ineffassign ./...
+
+      - name: Install gosec
+        run: go install github.com/securego/gosec/v2/cmd/gosec@latest
+
+      - name: Run gosec
+        run: gosec ./...
+        continue-on-error: true
+
+      - name: Install govulncheck
+        run: go install golang.org/x/vuln/cmd/govulncheck@latest
+
+      - name: Run govulncheck
+        run: govulncheck -test -show verbose ./...
+        continue-on-error: true
+
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    strategy:
+      matrix:
+        go: ['stable', 'oldstable']
+      fail-fast: true
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: ${{ matrix.go }}
+          check-latest: true
+
+      - name: Build drupal_auto
+        run: go build -a -gcflags=all="-l" -ldflags="-w -s" ./cmd/drupal_auto/...
+
+      - name: Build ohrm_auto
+        run: go build -a -gcflags=all="-l" -ldflags="-w -s" ./cmd/ohrm_auto/...

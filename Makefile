@@ -40,7 +40,7 @@ install:
 
 drupal_auto:
 	@echo " 🚧 building drupal_auto installer"
-	@$(GOLANG) build -v ./cmd/drupal_auto/...
+	@$(GOLANG) build -a -gcflags=all="-l" -ldflags="-w -s" ./cmd/drupal_auto/...
 
 drupal_auto_linux: drupal_auto
 	@echo " 💧 built drupal_auto installer"
@@ -48,7 +48,7 @@ drupal_auto_linux: drupal_auto
 
 ohrm_auto:
 	@echo " 🚧 building ohrm_auto installer"
-	@$(GOLANG) build -v ./cmd/ohrm_auto/...
+	@$(GOLANG) build -a -gcflags=all="-l" -ldflags="-w -s" ./cmd/ohrm_auto/...
 
 ohrm_auto_linux: ohrm_auto
 	@echo " 🍊 built ohrm_auto installer"
